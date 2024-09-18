@@ -1,0 +1,43 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: BackEndSem4
+  datasource:
+    url: jdbc:mysql://localhost:3306/projectsem4?useSSL=false&serverTimezone=UTC
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        dialect:  org.hibernate.dialect.MySQL8Dialect
+        enable_lazy_load_no_trans: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: novena.clinics@gmail.com
+    password: vanxygvdgpkvofrh
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+api:
+  prefix: /api/v1
+jwt:
+  expiration: 2592000 #30 days
+  secretKey: OK4atljOR/9rgDmGiXWoqakIMI9kGTyzm/YoOtpqibY=
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
