@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +38,7 @@ public class DoctorService implements IDoctorService{
     }
 
     @Override
+    @Transactional
     public Doctor createDoctor(DoctorDTO doctorDTO) throws DataNotFoundException {
         User userExsiting = userRepository.findById(doctorDTO.getUserId())
                 .orElseThrow(() -> new DataNotFoundException("User not found with id " + doctorDTO.getUserId()));
@@ -65,6 +67,7 @@ public class DoctorService implements IDoctorService{
     }
 
     @Override
+    @Transactional
     public Doctor updateDoctor(Long id, DoctorDTO doctorDTO) throws DataNotFoundException {
         Doctor doctorExisting = doctorRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Doctor not found with id " + id));
@@ -87,6 +90,7 @@ public class DoctorService implements IDoctorService{
     }
 
     @Override
+    @Transactional
     public void deleteDoctorById(Long id) throws Exception {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Doctor not found with id " + id));

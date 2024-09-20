@@ -41,7 +41,9 @@ public class WebSecurityConfig {
                                     String.format("%s/users/login", apiPrefix),
                                     String.format("%s/payment/vn-pay-callback**", apiPrefix),
                                     String.format("%s/contacts", apiPrefix)
-                                    ).permitAll()
+
+
+                            ).permitAll()
                             .requestMatchers(GET, String.format("%s/roles**", apiPrefix)).permitAll()
 
                             .requestMatchers(GET, String.format("%s/spcialties/**", apiPrefix)).permitAll()
@@ -57,6 +59,8 @@ public class WebSecurityConfig {
                             .requestMatchers(GET, String.format("%s/medications/**", apiPrefix)).permitAll()
 
                             .requestMatchers(GET, String.format("%s/images/view/**", apiPrefix)).permitAll()
+
+//
 
 
 

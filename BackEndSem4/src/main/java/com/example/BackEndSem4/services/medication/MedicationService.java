@@ -6,6 +6,7 @@ import com.example.BackEndSem4.models.Medication;
 import com.example.BackEndSem4.repositories.MedicationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DateTimeException;
 import java.util.List;
@@ -29,6 +30,7 @@ public class MedicationService {
     }
 
     // Create new medication
+    @Transactional
     public Medication createMedication(Medication medication) throws Exception {
         // Check if medication name already exists
         Optional<Medication> existingMedication = medicationRepository.findByMedicationName(medication.getMedicationName());
@@ -39,6 +41,7 @@ public class MedicationService {
     }
 
     // Update existing medication
+    @Transactional
     public Medication updateMedication(Long id, Medication medicationDetails) throws Exception {
         Medication medication = medicationRepository.findById(id)
                 .orElseThrow(() -> new Exception("Medication not found."));
@@ -54,6 +57,7 @@ public class MedicationService {
     }
 
     // Delete medication
+    @Transactional
     public void deleteMedication(Long id) throws Exception {
         Medication medication = medicationRepository.findById(id)
                 .orElseThrow(() -> new Exception("Medication not found."));

@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
@@ -37,11 +38,11 @@ public class ScheduleService implements IScheduleService{
 
 
     @Override
-    public Page<Schedule> getAllSchedules(Long clinicId, Long doctorId, LocalDate dateSchedule,
+    public Page<Schedule> getAllSchedules(Long specialtyId, Long doctorId, LocalDate dateSchedule,
                                           String keyword, Pageable pageable) {
 
 
-        return scheduleRepository.getAllSchedules(clinicId, doctorId, dateSchedule, keyword, pageable);
+        return scheduleRepository.getAllSchedules(specialtyId, doctorId, dateSchedule, keyword, pageable);
     }
 
     @Override
@@ -52,6 +53,7 @@ public class ScheduleService implements IScheduleService{
 
 
     @Override
+    @Transactional
     public Schedule createSchedule(ScheduleDTO scheduleDTO) throws DataNotFoundException {
 
         Doctor doctor = doctorRepository.findById(scheduleDTO.getDoctorId())
@@ -84,6 +86,7 @@ public class ScheduleService implements IScheduleService{
 
 
     @Override
+    @Transactional
     public Schedule updateSchedule(Long id, ScheduleDTO scheduleDTO) throws DataNotFoundException {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Schedule not found"));
@@ -117,6 +120,7 @@ public class ScheduleService implements IScheduleService{
 
 
     @Override
+    @Transactional
     public void deleteSchedule(Long id) throws DataNotFoundException {
         // Check kiểm tra để xóa mềm hay xóa cứng
         List<Booking> bookingList = bookingRepository.findAllByScheduleId(id);

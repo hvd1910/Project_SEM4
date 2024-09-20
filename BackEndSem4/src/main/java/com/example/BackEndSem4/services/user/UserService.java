@@ -16,6 +16,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -130,6 +131,7 @@ public class UserService implements IUserService{
     }
 
     @Override
+    @Transactional
     public User updateUser(Long userId, UserDTO userUpdateDTO) throws Exception {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(()-> new DataNotFoundException("User not found."));
@@ -137,7 +139,7 @@ public class UserService implements IUserService{
         // Check if the phoneNumber is being  change and  if  it already exists for  another user
         String newPhoneNumber = userUpdateDTO.getPhoneNumber();
         if(!existingUser.getPhoneNumber().equals(newPhoneNumber) && userRepository.existsByPhoneNumber(newPhoneNumber)) {
-            throw new DataIntegrityViolationException("Phone number already exists.");
+            throw new DataNotFoundException("Phone number already exists.");
         }
 
         // Update user information based on the DTO
@@ -174,6 +176,7 @@ public class UserService implements IUserService{
 
 
     @Override
+    @Transactional
     public User updateUserAdmin(Long userId, UserDTO userUpdateDTO) throws Exception {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(()-> new DataNotFoundException("User not found."));
@@ -181,7 +184,7 @@ public class UserService implements IUserService{
         // Check if the phoneNumber is being  change and  if  it already exists for  another user
         String newPhoneNumber = userUpdateDTO.getPhoneNumber();
         if(!existingUser.getPhoneNumber().equals(newPhoneNumber) && userRepository.existsByPhoneNumber(newPhoneNumber)) {
-            throw new DataIntegrityViolationException("Phone number already exists.");
+            throw new DataNotFoundException("Phone number already exists.");
         }
 
         // Update user information based on the DTO
@@ -224,6 +227,7 @@ public class UserService implements IUserService{
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long userId) throws Exception {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(()-> new DataNotFoundException("User not found."));

@@ -9,15 +9,19 @@ import com.example.BackEndSem4.models.Email;
 import com.example.BackEndSem4.repositories.BookingRepository;
 import com.example.BackEndSem4.response.Response;
 
+import com.example.BackEndSem4.response.booking.BookingListResponse;
 import com.example.BackEndSem4.response.booking.BookingResponse;
 import com.example.BackEndSem4.services.booking.BookingService;
 import com.example.BackEndSem4.services.email.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,11 +85,21 @@ public class BookingController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("")
-    public ResponseEntity<?> getAllBookings() {
-        List<BookingResponse> bookings = bookingService.getAllBookings()
-                .stream()
-                .map(BookingResponse::fromBookingResponse)
-                .collect(Collectors.toList());
+    public ResponseEntity<?> getAllBookings(
+            @RequestParam(defaultValue = "") LocalDate dateBooking,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "999999999") int limit,
+            @RequestParam(defaultValue = "") String sort,
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "") String status
+    ) {
+        Sort.Direction sortDirection = "asc".equalsIgnoreCase(sort) ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        PageRequest pageRequest = PageRequest.of(
+                page, limit,
+                Sort.by(sortDirection,"id")
+        );
+        BookingListResponse bookings = bookingService.getAllBookings(dateBooking, keyword, status, pageRequest);
         return ResponseEntity.ok(new Response("success", "Get booking all successfully.", bookings));
     }
 

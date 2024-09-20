@@ -29,7 +29,7 @@ public class SchedulController {
     // Lấy tất cả lịch khám
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("")
-    public ResponseEntity<?> getAllSchedules(@RequestParam(defaultValue = "") Long clinicId,
+    public ResponseEntity<?> getAllSchedules(@RequestParam(defaultValue = "") Long specialtyId,
                                              @RequestParam(defaultValue = "") Long doctorId,
                                              @RequestParam(defaultValue = "") LocalDate dateSchedule,
                                              @RequestParam(defaultValue = "0") int page,
@@ -46,7 +46,7 @@ public class SchedulController {
 
 
 
-        Page<ScheduleResponse> schedules = scheduleService.getAllSchedules(clinicId, doctorId, dateSchedule, keyword, pageRequest)
+        Page<ScheduleResponse> schedules = scheduleService.getAllSchedules(specialtyId, doctorId, dateSchedule, keyword, pageRequest)
                 .map(ScheduleResponse::fromSchedule);
 
         int totalPages = schedules.getTotalPages();

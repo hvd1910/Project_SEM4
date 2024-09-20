@@ -51,6 +51,7 @@ public class SpecialtyService implements ISpecialtyService{
     }
 
     @Override
+    @Transactional
     public Specialty updateSpecialty(Long id, SpecialtyDTO specialtyDTO) throws DataNotFoundException {
         Specialty existingSpecialty = specialtyRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Specialty not found with id " + id));
@@ -70,6 +71,7 @@ public class SpecialtyService implements ISpecialtyService{
     }
 
     @Override
+    @Transactional
     public void deleteSpecialtyById(Long id) throws Exception {
         Specialty specialty = specialtyRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Specialty not found with id " + id));

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -31,6 +32,7 @@ public class ClinicService implements IClinicService{
     }
 
     @Override
+    @Transactional
     public Clinic createClinic(ClinicDTO clinicDTO) throws DataNotFoundException {
         Optional<Clinic> existingClinic =
                 clinicRepository.findByClinicNameAndAddress(clinicDTO.getClinicName(), clinicDTO.getAddress());
@@ -51,6 +53,7 @@ public class ClinicService implements IClinicService{
     }
 
     @Override
+    @Transactional
     public Clinic updateClinic(Long id, ClinicDTO clinicDTO) throws DataNotFoundException {
         Clinic existingClinic = clinicRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Clinic not found with id " + id));
@@ -73,6 +76,7 @@ public class ClinicService implements IClinicService{
     }
 
     @Override
+    @Transactional
     public void deleteClinicById(Long id) throws Exception {
         Clinic clinic = clinicRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Clinic not found with id " + id));

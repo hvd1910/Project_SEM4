@@ -16,16 +16,16 @@ public interface ScheduleReponsitory extends JpaRepository<Schedule, Long> {
 
 
     @Query("SELECT s FROM Schedule s WHERE " +
-                "(:clinicId IS NULL OR s.clinic.id = :clinicId) AND " +
+                "(:specialtyId IS NULL OR s.doctor.specialty.id = :specialtyId) AND " +
                 "(:doctorId IS NULL OR s.doctor.id = :doctorId) AND " +
                 "(:dateSchedule IS NULL OR s.dateSchedule = :dateSchedule) AND " +
                 "(:keyword IS NULL OR " +
-                "(LOWER(s.clinic.clinicName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+                "(LOWER(s.doctor.specialty.specialtyName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
                 "LOWER(s.doctor.user.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-                "CAST(s.clinic.id AS string) LIKE CONCAT('%', :keyword, '%') OR " +
+                "CAST(s.doctor.specialty.id AS string) LIKE CONCAT('%', :keyword, '%') OR " +
                 "CAST(s.doctor.id AS string) LIKE CONCAT('%', :keyword, '%') OR " +
                 "CAST(s.id AS string) LIKE CONCAT('%', :keyword, '%')))")
-    Page<Schedule> getAllSchedules(@Param("clinicId") Long clinicId,
+    Page<Schedule> getAllSchedules(@Param("specialtyId") Long specialtyId,
                                    @Param("doctorId") Long doctorId,
                                    @Param("dateSchedule") LocalDate dateSchedule,
                                    @Param("keyword") String keyword,

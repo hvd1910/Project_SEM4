@@ -10,14 +10,21 @@ import com.example.BackEndSem4.repositories.BookingRepository;
 import com.example.BackEndSem4.repositories.HistoryRepository;
 import com.example.BackEndSem4.repositories.ScheduleReponsitory;
 import com.example.BackEndSem4.repositories.UserRepository;
+import com.example.BackEndSem4.response.booking.BookingListResponse;
+import com.example.BackEndSem4.response.booking.BookingResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +39,7 @@ public class BookingService implements IBookingService{
     private final HistoryRepository historyRepository;
 
     @Override
+    @Transactional
     public Booking createBooking(BookingDTO bookingDTO) throws DataNotFoundException {
         User user = userRepository.findById(bookingDTO.getUserId())
                 .orElseThrow(() -> new DataNotFoundException("User not found"));
@@ -95,6 +103,7 @@ public class BookingService implements IBookingService{
     }
 
     @Override
+    @Transactional
     public Booking updateBooking(Long id, BookingDTO bookingDTO) throws DataNotFoundException {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Booking not found"));
@@ -108,6 +117,7 @@ public class BookingService implements IBookingService{
     }
 
     @Override
+    @Transactional
     public Booking updateBookingStatus(Long id, String status) throws DataNotFoundException {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Booking not found"));
@@ -119,6 +129,7 @@ public class BookingService implements IBookingService{
     }
 
     @Override
+    @Transactional
     public Booking updateBookingStatusUser(Long id, String status) throws DataNotFoundException {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Booking not found"));
@@ -146,6 +157,7 @@ public class BookingService implements IBookingService{
     }
 
     @Override
+    @Transactional
     public void deleteBooking(Long id) throws DataNotFoundException {
         if (!bookingRepository.existsById(id)) {
             throw new DataNotFoundException("Booking not found");
@@ -160,9 +172,18 @@ public class BookingService implements IBookingService{
     }
 
     @Override
-    public List<Booking> getAllBookings() {
-        return bookingRepository.findAll();
-    }
+    public BookingListResponse getAllBookings(LocalDate dateBooking, String keyword,String status, Pageable pageable) {
+        Page<BookingResponse> bookings = bookingRepository.findAllBookings(dateBooking, keyword, status, pageable)
+                .map(BookingResponse::fromBookingResponse);
+
+        int totalPages = bookings.getTotalPages();
+        List<BookingResponse> bookingListResponses = bookings.getContent();
+
+        return BookingListResponse.builder()
+                .bookingList(bookingListResponses)
+                .totalPages(totalPages)
+                .build();
+        }
 
     @Override
     public List<Booking> getBookingsByUserId(Long userId) {
